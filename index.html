@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Book Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: #222;
+      color: white;
+      flex-wrap: wrap;
+    }
+
+    header .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header img {
+      height: 40px;
+    }
+
+    header button {
+      background: #ff9800;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* BOOK GRID */
+    .books {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      padding: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .books {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .book {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .book img {
+      width: 100%;
+      height: 350px;
+      object-fit: contain;
+      background: #eee;
+      border-radius: 6px;
+    }
+
+    .book h3 {
+      margin: 10px 0 5px;
+    }
+
+    .book p {
+      font-size: 14px;
+      margin: 4px 0;
+    }
+
+    .cart-btn {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* CART PANEL */
+    #cartPanel {
+      display: none;
+      background: white;
+      margin: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .checkout {
+      text-align: center;
+      margin: 30px;
+    }
+
+    .checkout button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background: #25D366;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="left">
+    <img src="logo.png" alt="Logo">
+    <h2>My Book Store</h2>
+  </div>
+  <button onclick="toggleCart()">🛒 Cart (<span id="cartCount">0</span>)</button>
+</header>
+
+<h1>Books</h1>
+
+<div class="books">
+  <!-- BOOK 1 -->
+  <div class="book">
+    <img src="book1.jpg" alt="Book 1">
+    <h3>The Silent Journey</h3>
+    <p><strong>Author:</strong> Amit Gandhi</p>
+    <p>An inspiring story of self-discovery. Learn how silence can change your life.</p>
+    Quantity:
+    <input type="number" min="1" value="1" id="q1">
+    <br>
+    <button class="cart-btn" onclick="addToCart('The Silent Journey', q1.value)">
+      Add to Cart
+    </button>
+  </div>
+
+  <!-- BOOK 2 -->
+  <div class="book">
+    <img src="book2.jpg" alt="Book 2">
+    <h3>Code & Beyond</h3>
+    <p><strong>Author:</strong> Amit Gandhi</p>
+    <p>A practical guide for programmers. Build real-world problem-solving skills.</p>
+    Quantity:
+    <input type="number" min="1" value="1" id="q2">
+    <br>
+    <button class="cart-btn" onclick="addToCart('Code & Beyond', q2.value)">
+      Add to Cart
+    </button>
+  </div>
+</div>
+
+<div id="cartPanel">
+  <h3>Your Cart</h3>
+  <div id="cartItems"></div>
+</div>
+
+<div class="checkout">
+  <button onclick="sendWhatsApp()">Send Order on WhatsApp</button>
+</div>
+
+<script>
+  let cart = [];
+
+  function addToCart(name, qty) {
+    qty = parseInt(qty);
+    if (qty <= 0) return;
+
+    const item = cart.find(i => i.name === name);
+    if (item) {
+      item.qty += qty;
+    } else {
+      cart.push({ name, qty });
+    }
+    updateCart();
+  }
+
+  function updateCart() {
+    const cartItems = document.getElementById('cartItems');
+    const cartCount = document.getElementById('cartCount');
+    cartItems.innerHTML = '';
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      total += item.qty;
+      cartItems.innerHTML += `
+        <p>
+          ${item.name} – Qty: ${item.qty}
+          <button onclick="removeItem(${index})">❌</button>
+        </p>
+      `;
+    });
+
+    cartCount.innerText = total;
+  }
+
+  function removeItem(index) {
+    cart.splice(index, 1);
+    updateCart();
+  }
+
+  function toggleCart() {
+    const panel = document.getElementById('cartPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function sendWhatsApp() {
+    if (cart.length === 0) {
+      alert('Cart is empty');
+      return;
+    }
+
+    let message = 'Hello, I want to order:%0A';
+    cart.forEach(item => {
+      message += `- ${item.name} (Qty: ${item.qty})%0A`;
+    });
+
+    const phone = '91XXXXXXXXXX'; // replace
+    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+  }
+</script>
+
+</body>
+</html>

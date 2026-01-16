@@ -12,7 +12,6 @@
       background: #f5f5f5;
     }
 
-    /* HEADER */
     header {
       display: flex;
       align-items: center;
@@ -46,18 +45,11 @@
       margin-top: 20px;
     }
 
-    /* BOOK GRID */
     .books {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 30px;
       padding: 20px;
-    }
-
-    @media (max-width: 600px) {
-      .books {
-        grid-template-columns: 1fr;
-      }
     }
 
     .book {
@@ -84,8 +76,31 @@
       margin: 4px 0;
     }
 
+    .qty-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .qty-box button {
+      width: 32px;
+      height: 32px;
+      font-size: 18px;
+      border: none;
+      background: #ddd;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .qty-box input {
+      width: 60px;
+      text-align: center;
+      font-size: 16px;
+    }
+
     .cart-btn {
-      margin-top: 10px;
+      margin-top: 12px;
       padding: 8px 12px;
       background: #4CAF50;
       color: white;
@@ -94,7 +109,6 @@
       cursor: pointer;
     }
 
-    /* CART PANEL */
     #cartPanel {
       display: none;
       background: white;
@@ -133,33 +147,79 @@
 <h1>Books</h1>
 
 <div class="books">
-  <!-- BOOK 1 -->
+
   <div class="book">
     <img src="book1.jpeg" alt="Book 1">
     <h3>The Silent Journey</h3>
     <p><strong>Author:</strong> Amit Gandhi</p>
     <p>An inspiring story of self-discovery. Learn how silence can change your life.</p>
-    Quantity:
-    <input type="number" min="1" value="1" id="q1">
-    <br>
-    <button class="cart-btn" onclick="addToCart('The Silent Journey', q1.value)">
+
+    <div class="qty-box">
+      <button onclick="changeQty(this, -1)">−</button>
+      <input type="number" value="0" min="0" oninput="validateQty(this)">
+      <button onclick="changeQty(this, 1)">+</button>
+    </div>
+
+    <button class="cart-btn"
+      onclick="addToCart('The Silent Journey', this.previousElementSibling.querySelector('input').value)">
       Add to Cart
     </button>
   </div>
 
-  <!-- BOOK 2 -->
   <div class="book">
     <img src="book2.jpg" alt="Book 2">
     <h3>Code & Beyond</h3>
     <p><strong>Author:</strong> Amit Gandhi</p>
     <p>A practical guide for programmers. Build real-world problem-solving skills.</p>
-    Quantity:
-    <input type="number" min="1" value="1" id="q2">
-    <br>
-    <button class="cart-btn" onclick="addToCart('Code & Beyond', q2.value)">
+
+    <div class="qty-box">
+      <button onclick="changeQty(this, -1)">−</button>
+      <input type="number" value="0" min="0" oninput="validateQty(this)">
+      <button onclick="changeQty(this, 1)">+</button>
+    </div>
+
+    <button class="cart-btn"
+      onclick="addToCart('Code & Beyond', this.previousElementSibling.querySelector('input').value)">
       Add to Cart
     </button>
   </div>
+
+  <div class="book">
+    <img src="book1.jpeg" alt="Book 1">
+    <h3>The Silent Journey</h3>
+    <p><strong>Author:</strong> Amit Gandhi</p>
+    <p>An inspiring story of self-discovery. Learn how silence can change your life.</p>
+
+    <div class="qty-box">
+      <button onclick="changeQty(this, -1)">−</button>
+      <input type="number" value="0" min="0" oninput="validateQty(this)">
+      <button onclick="changeQty(this, 1)">+</button>
+    </div>
+
+    <button class="cart-btn"
+      onclick="addToCart('The Silent Journey', this.previousElementSibling.querySelector('input').value)">
+      Add to Cart
+    </button>
+  </div>
+
+  <div class="book">
+    <img src="book1.jpeg" alt="Book 1">
+    <h3>The Silent Journey</h3>
+    <p><strong>Author:</strong> Amit Gandhi</p>
+    <p>An inspiring story of self-discovery. Learn how silence can change your life.</p>
+
+    <div class="qty-box">
+      <button onclick="changeQty(this, -1)">−</button>
+      <input type="number" value="0" min="0" oninput="validateQty(this)">
+      <button onclick="changeQty(this, 1)">+</button>
+    </div>
+
+    <button class="cart-btn"
+      onclick="addToCart('The Silent Journey', this.previousElementSibling.querySelector('input').value)">
+      Add to Cart
+    </button>
+  </div>
+
 </div>
 
 <div id="cartPanel">
@@ -174,23 +234,44 @@
 <script>
   let cart = [];
 
+  function validateQty(input) {
+    let value = parseInt(input.value);
+    if (isNaN(value) || value < 0) value = 0;
+    input.value = value;
+  }
+
+  function changeQty(button, change) {
+    const input = button.parentElement.querySelector('input');
+    let value = parseInt(input.value) + change;
+    if (isNaN(value) || value < 0) value = 0;
+    input.value = value;
+  }
+
   function addToCart(name, qty) {
     qty = parseInt(qty);
-    if (qty <= 0) return;
+
+    if (!qty || qty <= 0) {
+      alert("Please select at least 1 book");
+      return;
+    }
 
     const item = cart.find(i => i.name === name);
+
     if (item) {
       item.qty += qty;
     } else {
       cart.push({ name, qty });
     }
+
     updateCart();
+    document.getElementById('cartPanel').style.display = 'block';
   }
 
   function updateCart() {
     const cartItems = document.getElementById('cartItems');
     const cartCount = document.getElementById('cartCount');
     cartItems.innerHTML = '';
+
     let total = 0;
 
     cart.forEach((item, index) => {
@@ -217,21 +298,31 @@
   }
 
   function sendWhatsApp() {
-    if (cart.length === 0) {
-      alert('Cart is empty');
+    const validItems = cart.filter(item => item.qty > 0);
+
+    if (validItems.length === 0) {
+      alert("No books selected");
       return;
     }
 
-    let message = 'Hello, I want to order:%0A';
-    cart.forEach(item => {
-      message += `- ${item.name} (Qty: ${item.qty})%0A`;
+    let message = "Hello, I want to order:\n";
+
+    validItems.forEach(item => {
+      message += `- ${item.name} (Qty: ${item.qty})\n`;
     });
 
-    const phone = '917977517793'; // replace
-    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+    const phone = "917977517793"; // replace with your number
+
+    window.open(
+      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+
+    cart = [];
+    updateCart();
+    document.getElementById('cartPanel').style.display = 'none';
   }
 </script>
 
 </body>
 </html>
-

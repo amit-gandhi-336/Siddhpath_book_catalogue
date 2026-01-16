@@ -6,140 +6,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-    }
+    body { margin:0; font-family:Arial,sans-serif; background:#f5f5f5; }
+    header { display:flex; justify-content:space-between; padding:10px 16px; background:#222; color:#fff; }
+    header img { height:40px; }
+    header button { background:#ff9800; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; }
+    h1 { text-align:center; margin-top:20px; }
+    .books { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:30px; padding:20px; }
+    .book { background:#fff; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,.1); }
+    .book img { width:100%; height:350px; object-fit:contain; background:#eee; }
+    .qty-box { display:flex; gap:8px; margin-top:8px; align-items:center; }
+    .qty-box button { width:32px; height:32px; font-size:18px; border:none; background:#ddd; border-radius:4px; cursor:pointer; }
+    .qty-box input { width:60px; text-align:center; font-size:16px; }
+    .cart-btn { margin-top:12px; padding:8px 12px; background:#4CAF50; color:#fff; border:none; border-radius:5px; cursor:pointer; }
+    #cartPanel { display:none; background:#fff; margin:20px; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,.2); }
+    .checkout { text-align:center; margin:30px; }
+    .checkout button { padding:12px 20px; background:#25D366; color:#fff; border:none; border-radius:6px; cursor:pointer; }
 
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      background: #222;
-      color: white;
-      flex-wrap: wrap;
-    }
-
-    header .left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    header img {
-      height: 40px;
-    }
-
-    header button {
-      background: #ff9800;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .books {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      padding: 20px;
-    }
-
-    .book {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .book img {
-      width: 100%;
-      height: 350px;
-      object-fit: contain;
-      background: #eee;
-      border-radius: 6px;
-    }
-
-    .book h3 {
-      margin: 10px 0 5px;
-    }
-
-    .book p {
-      font-size: 14px;
-      margin: 4px 0;
-    }
-
-    .qty-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .qty-box button {
-      width: 32px;
-      height: 32px;
-      font-size: 18px;
-      border: none;
-      background: #ddd;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .qty-box input {
-      width: 60px;
-      text-align: center;
-      font-size: 16px;
-    }
-
-    .cart-btn {
-      margin-top: 12px;
-      padding: 8px 12px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #cartPanel {
-      display: none;
-      background: white;
-      margin: 20px;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-
-    .checkout {
-      text-align: center;
-      margin: 30px;
-    }
-
-    .checkout button {
-      padding: 12px 20px;
-      font-size: 16px;
-      background: #25D366;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); justify-content:center; align-items:center; }
+    .modal-content { background:#fff; padding:20px; border-radius:8px; width:90%; max-width:400px; }
+    .modal-content input, .modal-content textarea { width:100%; margin-top:10px; padding:8px; }
+    .modal-actions { margin-top:15px; text-align:right; }
+    .modal-actions button { padding:8px 14px; border:none; border-radius:4px; cursor:pointer; }
+    .confirm-btn { background:#25D366; color:#fff; }
+    .cancel-btn { background:#ccc; }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="left">
-    <img src="logo.png" alt="Logo">
-    <h2>My Book Store</h2>
+  <div>
+    <img src="logo.png">
+    <strong>Siddhpath</strong>
   </div>
   <button onclick="toggleCart()">🛒 Cart (<span id="cartCount">0</span>)</button>
 </header>
@@ -147,17 +44,51 @@
 <h1>Books</h1>
 
 <div class="books">
-
   <div class="book">
-    <img src="book1.jpeg" alt="Book 1">
-    <h3>The Silent Journey</h3>
+    <img src="book1.jpeg">
+    <h3>The Power of your subconcious mind</h3>
     <p><strong>Author:</strong> Amit Gandhi</p>
-    <p>An inspiring story of self-discovery. Learn how silence can change your life.</p>
 
     <div class="qty-box">
-      <button onclick="changeQty(this, -1)">−</button>
+      <button onclick="changeQty(this,-1)">−</button>
       <input type="number" value="0" min="0" oninput="validateQty(this)">
-      <button onclick="changeQty(this, 1)">+</button>
+      <button onclick="changeQty(this,1)">+</button>
+    </div>
+
+<div class="books">
+  <div class="book">
+    <img src="book4.jpg">
+    <h3>The Alchemist</h3>
+    <p><strong>Author:</strong> Amit Gandhi</p>
+
+    <div class="qty-box">
+      <button onclick="changeQty(this,-1)">−</button>
+      <input type="number" value="0" min="0" oninput="validateQty(this)">
+      <button onclick="changeQty(this,1)">+</button>
+    </div>
+
+<div class="books">
+  <div class="book">
+    <img src="book2.jpg">
+    <h3>The Life that's waiting</h3>
+    <p><strong>Author:</strong> Amit Gandhi</p>
+
+    <div class="qty-box">
+      <button onclick="changeQty(this,-1)">−</button>
+      <input type="number" value="0" min="0" oninput="validateQty(this)">
+      <button onclick="changeQty(this,1)">+</button>
+    </div>
+
+<div class="books">
+  <div class="book">
+    <img src="book3.jpg">
+    <h3>Ikigai</h3>
+    <p><strong>Author:</strong> Amit Gandhi</p>
+
+    <div class="qty-box">
+      <button onclick="changeQty(this,-1)">−</button>
+      <input type="number" value="0" min="0" oninput="validateQty(this)">
+      <button onclick="changeQty(this,1)">+</button>
     </div>
 
     <button class="cart-btn"
@@ -165,61 +96,6 @@
       Add to Cart
     </button>
   </div>
-
-  <div class="book">
-    <img src="book2.jpg" alt="Book 2">
-    <h3>Code & Beyond</h3>
-    <p><strong>Author:</strong> Amit Gandhi</p>
-    <p>A practical guide for programmers. Build real-world problem-solving skills.</p>
-
-    <div class="qty-box">
-      <button onclick="changeQty(this, -1)">−</button>
-      <input type="number" value="0" min="0" oninput="validateQty(this)">
-      <button onclick="changeQty(this, 1)">+</button>
-    </div>
-
-    <button class="cart-btn"
-      onclick="addToCart('Code & Beyond', this.previousElementSibling.querySelector('input').value)">
-      Add to Cart
-    </button>
-  </div>
-
-  <div class="book">
-    <img src="book3.jpg" alt="Book 3">
-    <h3>Ikigai</h3>
-    <p><strong>Author:</strong> Amit Gandhi</p>
-    <p>An inspiring story of self-discovery. Learn how silence can change your life.</p>
-
-    <div class="qty-box">
-      <button onclick="changeQty(this, -1)">−</button>
-      <input type="number" value="0" min="0" oninput="validateQty(this)">
-      <button onclick="changeQty(this, 1)">+</button>
-    </div>
-
-    <button class="cart-btn"
-      onclick="addToCart('Ikigai', this.previousElementSibling.querySelector('input').value)">
-      Add to Cart
-    </button>
-  </div>
-
-  <div class="book">
-    <img src="book4.jpg" alt="Book 4">
-    <h3>The Alchemist</h3>
-    <p><strong>Author:</strong> Paulo Coelho</p>
-    <p>A timeless tale of a shepherd boy's journey to find treasure and discover his destiny.</p>
-
-    <div class="qty-box">
-      <button onclick="changeQty(this, -1)">−</button>
-      <input type="number" value="0" min="0" oninput="validateQty(this)">
-      <button onclick="changeQty(this, 1)">+</button>
-    </div>
-
-    <button class="cart-btn"
-      onclick="addToCart('The Alchemist', this.previousElementSibling.querySelector('input').value)">
-      Add to Cart
-    </button>
-  </div>
-
 </div>
 
 <div id="cartPanel">
@@ -228,100 +104,72 @@
 </div>
 
 <div class="checkout">
-  <button onclick="sendWhatsApp()">Send Order on WhatsApp</button>
+  <button onclick="openCustomerForm()">Send Order on WhatsApp</button>
+</div>
+
+<div class="modal" id="customerModal">
+  <div class="modal-content">
+    <h3>Your Details</h3>
+    <input id="custName" placeholder="Your Name">
+    <textarea id="custAddress" rows="3" placeholder="Delivery Address"></textarea>
+
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeCustomerForm()">Cancel</button>
+      <button class="confirm-btn" onclick="confirmOrder()">Confirm & Send</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  let cart = [];
+let cart = [];
 
-  function validateQty(input) {
-    let value = parseInt(input.value);
-    if (isNaN(value) || value < 0) value = 0;
-    input.value = value;
-  }
+function validateQty(i){ let v=parseInt(i.value); if(isNaN(v)||v<0)v=0; i.value=v; }
+function changeQty(b,c){ const i=b.parentElement.querySelector('input'); let v=parseInt(i.value)+c; if(v<0)v=0; i.value=v; }
 
-  function changeQty(button, change) {
-    const input = button.parentElement.querySelector('input');
-    let value = parseInt(input.value) + change;
-    if (isNaN(value) || value < 0) value = 0;
-    input.value = value;
-  }
+function addToCart(name,qty){
+  qty=parseInt(qty);
+  if(!qty) return alert("Select at least 1 book");
+  const item=cart.find(i=>i.name===name);
+  item?item.qty+=qty:cart.push({name,qty});
+  updateCart();
+  document.getElementById('cartPanel').style.display='block';
+}
 
-  function addToCart(name, qty) {
-    qty = parseInt(qty);
+function updateCart(){
+  let html='',total=0;
+  cart.forEach((i,x)=>{ total+=i.qty; html+=`${i.name} – Qty: ${i.qty} <button onclick="removeItem(${x})">❌</button><br>`; });
+  cartItems.innerHTML=html;
+  cartCount.innerText=total;
+}
 
-    if (!qty || qty <= 0) {
-      alert("Please select at least 1 book");
-      return;
-    }
+function removeItem(i){ cart.splice(i,1); updateCart(); }
+function toggleCart(){ cartPanel.style.display=cartPanel.style.display==='none'?'block':'none'; }
 
-    const item = cart.find(i => i.name === name);
+function openCustomerForm(){
+  if(!cart.length) return alert("No books selected");
+  customerModal.style.display='flex';
+}
+function closeCustomerForm(){ customerModal.style.display='none'; }
 
-    if (item) {
-      item.qty += qty;
-    } else {
-      cart.push({ name, qty });
-    }
+function confirmOrder(){
+  const name=custName.value.trim();
+  const addr=custAddress.value.trim();
+  if(!name||!addr) return alert("Fill all details");
 
-    updateCart();
-    document.getElementById('cartPanel').style.display = 'block';
-  }
+  let msg = `Order Request
 
-  function updateCart() {
-    const cartItems = document.getElementById('cartItems');
-    const cartCount = document.getElementById('cartCount');
-    cartItems.innerHTML = '';
+Name: ${name}
+Address: ${addr}
 
-    let total = 0;
+Books:
+`;
 
-    cart.forEach((item, index) => {
-      total += item.qty;
-      cartItems.innerHTML += `
-        <p>
-          ${item.name} – Qty: ${item.qty}
-          <button onclick="removeItem(${index})">❌</button>
-        </p>
-      `;
-    });
+  cart.forEach(i=> msg += `- ${i.name} (Qty: ${i.qty})\n`);
 
-    cartCount.innerText = total;
-  }
+  window.open(`https://wa.me/917977517793?text=${encodeURIComponent(msg)}`,'_blank');
 
-  function removeItem(index) {
-    cart.splice(index, 1);
-    updateCart();
-  }
-
-  function toggleCart() {
-    const panel = document.getElementById('cartPanel');
-    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-  }
-
-  function sendWhatsApp() {
-    const validItems = cart.filter(item => item.qty > 0);
-
-    if (validItems.length === 0) {
-      alert("No books selected");
-      return;
-    }
-
-    let message = "Hello, I want to order:\n";
-
-    validItems.forEach(item => {
-      message += `- ${item.name} (Qty: ${item.qty})\n`;
-    });
-
-    const phone = "917977517793"; // replace with your number
-
-    window.open(
-      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
-      "_blank"
-    );
-
-    cart = [];
-    updateCart();
-    document.getElementById('cartPanel').style.display = 'none';
-  }
+  cart=[]; updateCart(); closeCustomerForm(); cartPanel.style.display='none';
+}
 </script>
 
 </body>

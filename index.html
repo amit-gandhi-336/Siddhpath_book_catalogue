@@ -44,9 +44,11 @@
 <h1>Books</h1>
 
 <div class="books">
+
+  <!-- BOOK 1 -->
   <div class="book">
     <img src="book1.jpeg">
-    <h3>The Power of your subconcious mind</h3>
+    <h3>The Power of Your Subconscious Mind</h3>
     <p><strong>Author:</strong> Amit Gandhi</p>
 
     <div class="qty-box">
@@ -55,7 +57,13 @@
       <button onclick="changeQty(this,1)">+</button>
     </div>
 
-<div class="books">
+    <button class="cart-btn"
+      onclick="addToCart('The Power of Your Subconscious Mind', this.previousElementSibling.querySelector('input').value)">
+      Add to Cart
+    </button>
+  </div>
+
+  <!-- BOOK 2 -->
   <div class="book">
     <img src="book4.jpg">
     <h3>The Alchemist</h3>
@@ -67,10 +75,16 @@
       <button onclick="changeQty(this,1)">+</button>
     </div>
 
-<div class="books">
+    <button class="cart-btn"
+      onclick="addToCart('The Alchemist', this.previousElementSibling.querySelector('input').value)">
+      Add to Cart
+    </button>
+  </div>
+
+  <!-- BOOK 3 -->
   <div class="book">
     <img src="book2.jpg">
-    <h3>The Life that's waiting</h3>
+    <h3>The Life That’s Waiting</h3>
     <p><strong>Author:</strong> Amit Gandhi</p>
 
     <div class="qty-box">
@@ -79,7 +93,13 @@
       <button onclick="changeQty(this,1)">+</button>
     </div>
 
-<div class="books">
+    <button class="cart-btn"
+      onclick="addToCart('The Life That’s Waiting', this.previousElementSibling.querySelector('input').value)">
+      Add to Cart
+    </button>
+  </div>
+
+  <!-- BOOK 4 -->
   <div class="book">
     <img src="book3.jpg">
     <h3>Ikigai</h3>
@@ -92,10 +112,11 @@
     </div>
 
     <button class="cart-btn"
-      onclick="addToCart('The Silent Journey', this.previousElementSibling.querySelector('input').value)">
+      onclick="addToCart('Ikigai', this.previousElementSibling.querySelector('input').value)">
       Add to Cart
     </button>
   </div>
+
 </div>
 
 <div id="cartPanel">
@@ -132,7 +153,7 @@ function addToCart(name,qty){
   const item=cart.find(i=>i.name===name);
   item?item.qty+=qty:cart.push({name,qty});
   updateCart();
-  document.getElementById('cartPanel').style.display='block';
+  cartPanel.style.display='block';
 }
 
 function updateCart(){
@@ -163,7 +184,6 @@ Address: ${addr}
 
 Books:
 `;
-
   cart.forEach(i=> msg += `- ${i.name} (Qty: ${i.qty})\n`);
 
   window.open(`https://wa.me/917977517793?text=${encodeURIComponent(msg)}`,'_blank');
